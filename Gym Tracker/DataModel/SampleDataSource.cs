@@ -40,6 +40,39 @@ namespace Gym_Tracker.Data
     }
 
     /// <summary>
+    /// Routine data item - Group of exercises
+    /// </summary>
+    public class RoutineDataItem
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public DateTime LastUsed { get; set; }
+        public ObservableCollection<ExerciseDataItem> Exercises { get; set; }
+
+        public RoutineDataItem(String name) 
+        {
+            Initialize(name, "", new ObservableCollection<ExerciseDataItem>());
+        }
+
+        public RoutineDataItem(String name, String description)
+        {
+            Initialize(name, description, new ObservableCollection<ExerciseDataItem>());
+        }
+
+        public RoutineDataItem (String name, String description, ObservableCollection<ExerciseDataItem> exercises)
+        {
+            Initialize(name, description, exercises);
+        }
+
+        private void Initialize (String name, String description, ObservableCollection<ExerciseDataItem> exercises)
+        {
+            this.Name = name;
+            this.Description = description;
+            this.Exercises = exercises;
+        }
+}
+
+    /// <summary>
     /// Generic item data model.
     /// </summary>
     public class SampleDataItem
@@ -121,7 +154,7 @@ namespace Gym_Tracker.Data
         {
             await _sampleDataSource.GetSampleDataAsync();
             // Simple linear search is acceptable for small data sets
-            var matches = _sampleDataSource.Groups.SelectMany(group => group.Items).Where((item) => item.UniqueId.Equals(uniqueId));
+            var matches = _sampleDataSource.Groups.SelectMany(group => group.Items).Where((item) => item.Title.Equals(uniqueId));
             if (matches.Count() == 1) return matches.First();
             return null;
         }
@@ -150,14 +183,10 @@ namespace Gym_Tracker.Data
                 foreach (JsonValue itemValue in groupObject["Items"].GetArray())
                 {
                     JsonObject itemObject = itemValue.GetObject();
-                    group.Items.Add(new SampleDataItem(itemObject["UniqueId"].GetString(),
-                                                       itemObject["Title"].GetString(),
-                                                       itemObject["Subtitle"].GetString(),
-                                                       itemObject["ImagePath"].GetString(),
-                                                       itemObject["Description"].GetString(),
-                                                       itemObject["Content"].GetString()));
+                    group.Items.Add(new SampleDataItem(itemObject["Title"].GetString()));
+
+                    this.Groups.Add(group);
                 }
-                this.Groups.Add(group);
             }
         }
     }

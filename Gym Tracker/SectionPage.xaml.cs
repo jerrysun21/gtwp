@@ -90,7 +90,7 @@ namespace Gym_Tracker
         /// <param name="e">Event data that describes the item clicked.</param>
         private void ItemView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var itemId = ((SampleDataItem)e.ClickedItem).UniqueId;
+            var itemId = ((SampleDataItem)e.ClickedItem).Title;
             if (!Frame.Navigate(typeof(ItemPage), itemId))
             {
                 var resourceLoader = ResourceLoader.GetForCurrentView("Resources");
